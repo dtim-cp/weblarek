@@ -1,13 +1,10 @@
-import { IProduct } from '../../../types';
+import { IProduct } from '../../types';
 
 export class CatalogProducts {
   private products: IProduct[] = [];
   private selectedProduct: IProduct | null = null;
 
-  constructor(products: IProduct[], selectedProduct: IProduct | null) {
-    this.products = products;
-    this.selectedProduct = selectedProduct;
-  }
+  constructor() {};
 
   setProducts(products: IProduct[]): void {
     this.products = products;
@@ -22,7 +19,7 @@ export class CatalogProducts {
     return this.products.find(product => String(product.id) === targetId);
   }
 
-  setSelectedProduct(selectedProduct: IProduct | null): void {
+  setSelectedProduct(selectedProduct: IProduct): void {
     this.selectedProduct = selectedProduct;
   }
 

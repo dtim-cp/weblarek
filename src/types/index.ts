@@ -23,16 +23,14 @@ export interface IBuyer {
   address: string;
 }
 
+export type Valid = Partial<Record<keyof IBuyer, string>>;
+
 export interface IGetProductsResponse {
   total: number;
   items: IProduct[];
 }
 
-export interface IOrderRequest {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
+export interface IOrderRequest extends IBuyer {
   total: number;
   items: string[];
 }

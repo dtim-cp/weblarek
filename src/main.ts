@@ -1,15 +1,15 @@
 import './scss/styles.scss';
 
 import { apiProducts } from './utils/data';
-import { CatalogProducts } from './components/base/Models/CatalogProducts';
-import { CartProducts } from './components/base/Models/CartProducts';
-import { Buyer } from './components/base/Models/Buyer';
-import { OrderService } from './components/base/Models/OrderService';
+import { CatalogProducts } from './components/Models/CatalogProducts';
+import { CartProducts } from './components/Models/CartProducts';
+import { Buyer } from './components/Models/Buyer';
+import { OrderService } from './components/Models/OrderService';
 import { Api } from './components/base/Api';
 import { API_URL } from './utils/constants';
 
 // методы класса CatalogProducts
-const catalog = new CatalogProducts([], null);
+const catalog = new CatalogProducts();
 catalog.setProducts(apiProducts.items); // сохранение массива товаров
 console.log("Массив товаров из каталога: ", catalog.getProducts()); // получение массива товаров
 
@@ -26,19 +26,27 @@ const cart = new CartProducts([]);
 console.log("Массив товаров из корзины: ", cart.getSelectedProducts()); // получение массива товара из корзины
 
 cart.addSelectedProducts(apiProducts.items[1]); // добавление товара в корзину
-console.log("Новый массив товаров из корзины: ", cart.getSelectedProducts());
-
-cart.removeSelectedProducts(apiProducts.items[1].id); // удаление товара из корзины
-console.log("Новый массив товаров из корзины: ", cart.getSelectedProducts());
-
-cart.clearCart(); // очистка корзины
+cart.addSelectedProducts(apiProducts.items[2]); // добавление товара в корзину
+cart.addSelectedProducts(apiProducts.items[3]); // добавление товара в корзину
 console.log("Новый массив товаров из корзины: ", cart.getSelectedProducts());
 
 console.log("Стоимость товаров в корзине:", cart.getTotalPrice()); // получение стоимости всех товаров
 
 console.log("Количество товаров в корзине:", cart.getTotalCount()); // получение количества товаров в корзине
 
-console.log("Наличие товара в корзине:", cart.hasProduct(apiProducts.items[2].id)); // проверить наличие товара в корзине
+console.log("Наличие товара в корзине:", cart.hasProduct(apiProducts.items[3].id)); // проверить наличие товара в корзине
+
+cart.removeSelectedProducts(apiProducts.items[1].id); // удаление товара из корзины
+console.log("Массив товаров из корзины после удаления одного товара: ", cart.getSelectedProducts());
+
+cart.clearCart(); // очистка корзины
+console.log("Массив товаров после очистки корзины: ", cart.getSelectedProducts());
+
+console.log("Стоимость товаров в корзине после очистки:", cart.getTotalPrice()); // получение стоимости всех товаров
+
+console.log("Количество товаров в корзине после очистки:", cart.getTotalCount()); // получение количества товаров в корзине
+
+console.log("Наличие товара в корзине после очистки:", cart.hasProduct(apiProducts.items[3].id)); // проверить наличие товара в корзине
 
 // методы класса Buyer
 const buyer = new Buyer;

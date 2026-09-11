@@ -141,7 +141,7 @@ address - это адрес доставки.
 Отвечает за хранение и управление списком всех товаров, а также за состояние просмотра конкретного товара.
 
 Конструктор:
-`constructor(products: IProduct[], selectedProduct: IProduct[] | null)` - инициализирует пустой массив списка товаров.
+`constructor()` - инициализирует пустой массив списка товаров.
 
 Поля класса:
 `products: IProduct[]` - хранит массив всех товаров.
@@ -151,7 +151,7 @@ address - это адрес доставки.
 `setProducts(products: IProduct[]): void` - сохранение массива товаров, полученных в параметрах метода.
 `getProducts(): IProduct[]` - получение массива товара из модели.
 `getProductById(id: string): IProduct | undefined` - получение одного товара по его id.
-`setSelectedProduct(selectedProduct: IProduct[] | null): void` - сохранение товара для подробного отображения.
+`setSelectedProduct(selectedProduct: IProduct[]): void` - сохранение товара для подробного отображения.
 `getSelectedProduct(): IProduct[] | null` - получение товара для подробного отображения.
 
 #### Класс CartProducts

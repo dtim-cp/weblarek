@@ -1,4 +1,4 @@
-import { IProduct } from '../../../types';
+import { IProduct } from '../../types';
 
 export class CartProducts {
   private selectedProducts: IProduct[] = [];
@@ -33,7 +33,7 @@ export class CartProducts {
   }
 
   hasProduct(id: string): boolean {
-    const targetId = String(id);
-    return this.selectedProducts.some((prod) => String(prod.id) === targetId);
+    const targetId = id;
+    return this.selectedProducts.some((prod) => prod.id === targetId);
   }
 }
