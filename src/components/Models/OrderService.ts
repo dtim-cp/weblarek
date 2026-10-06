@@ -1,4 +1,9 @@
-import { IApi, IProduct, IGetProductsResponse, IOrderRequest, IOrderResponse } from '../../types';
+import {
+  IApi,
+  IGetProductsResponse,
+  IOrderRequest,
+  IOrderResponse,
+} from "../../types";
 
 export class OrderService {
   private api: IApi;
@@ -7,11 +12,11 @@ export class OrderService {
     this.api = api;
   }
 
-  async getProducts(): Promise<IProduct[]> {
-    return (await this.api.get<IGetProductsResponse>('/product/')).items;
+  async getProducts(): Promise<IGetProductsResponse> {
+    return this.api.get<IGetProductsResponse>("/product/");
   }
 
   async sendOrder(order: IOrderRequest): Promise<IOrderResponse> {
-    return await this.api.post<IOrderResponse>('/order/', order);
+    return this.api.post<IOrderResponse>("/order/", order);
   }
 }

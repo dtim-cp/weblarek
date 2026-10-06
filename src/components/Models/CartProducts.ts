@@ -1,10 +1,14 @@
-import { IProduct } from '../../types';
+import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class CartProducts {
-  private selectedProducts: IProduct[] = [];
+  private selectedProducts: IProduct[];
 
-  constructor(selectedProducts: IProduct[]) {
-    this.selectedProducts = selectedProducts;
+  constructor(
+    selectedProducts: IProduct[],
+    protected events: IEvents,
+  ) {
+    this.selectedProducts = [...selectedProducts];
   }
 
   getSelectedProducts(): IProduct[] {
@@ -12,20 +16,28 @@ export class CartProducts {
   }
 
   addSelectedProducts(product: IProduct): void {
+    if (this.hasProduct(product.id)) return;
     this.selectedProducts.push(product);
+    this.events.emit("cart:change");
   }
 
   removeSelectedProducts(id: string): void {
-    const targetId = String(id);
-    this.selectedProducts = this.selectedProducts.filter((prod) => String(prod.id) !== targetId);
+    this.selectedProducts = this.selectedProducts.filter(
+      (prod) => String(prod.id) !== id,
+    );
+    this.events.emit("cart:change");
   }
 
   clearCart(): void {
     this.selectedProducts = [];
+    this.events.emit("cart:change");
   }
 
   getTotalPrice(): number {
-    return this.selectedProducts.reduce((sum, prod) => sum + (prod.price || 0), 0);
+    return this.selectedProducts.reduce(
+      (sum, prod) => sum + (prod.price || 0),
+      0,
+    );
   }
 
   getTotalCount(): number {
@@ -33,7 +45,6 @@ export class CartProducts {
   }
 
   hasProduct(id: string): boolean {
-    const targetId = id;
-    return this.selectedProducts.some((prod) => prod.id === targetId);
+    return this.selectedProducts.some((prod) => prod.id === id);
   }
 }
