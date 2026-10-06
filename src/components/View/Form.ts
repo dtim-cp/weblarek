@@ -1,6 +1,11 @@
+import { TPayment } from "../../types";
 import { ensureElement } from "../../utils/utils";
 import { Component } from "../base/Component";
 import { IEvents } from "../base/Events";
+
+export type TFormChange =
+  | { field: "payment"; value: TPayment }
+  | { field: "address" | "email" | "phone"; value: string };
 
 export interface IForm {
   error: string;
@@ -40,10 +45,7 @@ export abstract class Form<T = object> extends Component<IForm & T> {
     this.formButtonElement.disabled = value;
   }
 
-  onInputChange(field: keyof T, value: string) {
-    this.events.emit("form:change", {
-      field,
-      value,
-    });
+  onInputChange(data: TFormChange) {
+    this.events.emit<TFormChange>("form:change", data);
   }
 }

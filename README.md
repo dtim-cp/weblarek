@@ -123,7 +123,7 @@ price - это стоимость товара, которая может быт
 
 2. Покупатель:
 interface IBuyer {
-  payment: TPayment;
+  payment: TPayment | null;
   email: string;
   phone: string;
   address: string;
@@ -141,24 +141,24 @@ address - это адрес доставки.
 Отвечает за хранение и управление списком всех товаров, а также за состояние просмотра конкретного товара.
 
 Конструктор:
-`constructor()` - инициализирует пустой массив списка товаров.
+`constructor(protected events: IEvents)` - инициализирует пустой массив списка товаров и принимает обработчик событий.
 
 Поля класса:
 `products: IProduct[]` - хранит массив всех товаров.
-`selectedProduct: IProduct[] | null` - хранит товар, который выбрали для подробного отображения.
+`selectedProduct: IProduct | null` - хранит товар, который выбрали для подробного отображения.
 
 Методы класса:
 `setProducts(products: IProduct[]): void` - сохранение массива товаров, полученных в параметрах метода.
 `getProducts(): IProduct[]` - получение массива товара из модели.
 `getProductById(id: string): IProduct | undefined` - получение одного товара по его id.
-`setSelectedProduct(selectedProduct: IProduct[]): void` - сохранение товара для подробного отображения.
-`getSelectedProduct(): IProduct[] | null` - получение товара для подробного отображения.
+`setSelectedProduct(selectedProduct: IProduct): void` - сохранение товара для подробного отображения.
+`getSelectedProduct(): IProduct | null` - получение товара для подробного отображения.
 
 #### Класс CartProducts
 Отвечает за хранение товаров, которые пользователь выбрал для покупки.
 
 Конструктор:
-`constructor(selectedProducts: IProduct[])` - инициализирует массив товаров, выбранных покупателем для покупки.
+`constructor(protected events: IEvents)` - принимает обработчик событий.
 
 Поля класса:
 `selectedProducts: IProduct[]` - хранит массив товаров, выбранных покупателем для покупки.
@@ -176,11 +176,11 @@ address - это адрес доставки.
 Отвечает за хранение и проверку данных покупателя, которые необходимо указать при оформлении заказа.
 
 Конструктор:
-`constructor()` - инициализирует объект покупателя с пустыми значениями.
+`constructor(protected events: IEvents)` - принимает обработчик событий.
 
 Поля класса:
 Объект хранит следующие данные покупателя:
-способ оплаты - `payment: 'card' | 'cash'`;
+способ оплаты - `payment: 'card' | 'cash' | null`;
 адрес - `address: string`;
 почта - `email: string`;
 телефон - `phone: string`.
@@ -219,13 +219,10 @@ interface IGetProductsResponse {
 }
 
 2. Данный интерфейс описывает структуру запроса на создание заказа.
-interface IOrderRequest {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
+interface IOrderRequest extends Omit<IBuyer, "payment"> {
   total: number;
   items: string[];
+  payment: TPayment;
 }
 
 3. Данный интерфейс описывает структуру ответа на создание заказа.
@@ -249,12 +246,10 @@ interface IOrderResponse {
 Поля класса:
 `titleElement: HTMLElement` - элемент заголовка;
 `priceElement: HTMLElement` - элемент цены;
-`cardId?: string` - отвечает за id товара;
 
 Методы класса:
 `set title(value: string)` - устанавливает текст заголовка.
 `set price(value: number | null)` - устанавливает цену товара.
-`set id(value: string)` - получение одного товара по его id.
 
 ##### Form
 Родительский класс для `Order` и `Contacts`.
@@ -270,7 +265,7 @@ interface IOrderResponse {
 Методы класса:
 `set error(value: string)` - устанавливает ошибки в форме.
 `set buttonStatus(value: boolean)` - отображает состояние кнопки.
-`onInputChange(field: keyof T, value: string)` - обработчик событий.
+`onInputChange(data: TFormChange)` - обработчик событий.
 
 #### Header
 Отвечает за отображение корзины и счетчика товаров, находящихся в корзине.
@@ -298,7 +293,7 @@ interface IOrderResponse {
 Отвечает за отображение модальных окон.
 
 Конструктор:
-`constructor(container: HTMLElement, protected events: IEvents)` - принимает HTMLElement и обработчик событий.
+`constructor(container: HTMLElement)` - принимает HTMLElement.
 
 Поля класса:
 `modalButton: HTMLButtonElement` - элемент кнопки закрытия.
@@ -329,7 +324,7 @@ interface IOrderResponse {
 Отвечает за отображение карточек товаров на главной странице.
 
 Конструктор:
-`constructor(container: HTMLElement, protected events: IEvents)` - принимает HTMLElement и обработчик событий.
+`constructor(container: HTMLElement, onClick: () => void)` - принимает HTMLElement и колбэк.
 
 Поля класса:
 `categoryElement: HTMLElement` - элемент категории товара.
@@ -337,7 +332,7 @@ interface IOrderResponse {
 
 Методы класса:
 `set category(value: string)` - устанавливает категорию товара.
-`set image(value: string)` - устанавливает изображение товара.
+`set image(value: { src: string; alt: string })` - устанавливает изображение товара или его текстовое описание.
 
 #### CardPreview
 Отвечает за отображение карточки для подробного просмотра.
@@ -356,12 +351,13 @@ interface IOrderResponse {
 `set image(value: string)` - устанавливает изображение товара.
 `set description(value: string)` - устанавливает описание товара.
 `set button(value:string)` - отображение кнопки.
+`set buttonDisabled(value: boolean)` - отображение состояния кнопки.
 
 #### CardBasket
 Отвечает за отображение карточек товаров в корзине.
 
 Конструктор:
-`constructor(container: HTMLElement, protected events: IEvents)` - принимает HTMLElement и обработчик событий.
+`constructor(container: HTMLElement, onClick: () => void)` - принимает HTMLElement и колбэк.
 
 Поля класса:
 `indexElement: HTMLElement` - отображение порядкового номера товаров в корзине.
@@ -374,7 +370,7 @@ interface IOrderResponse {
 Отвечает за отображение формы оформления заказа для заполнения данных покупателя: способ оплаты и адрес.
 
 Конструктор:
-`constructor(container: HTMLElement, protected events: IEvents)` - принимает HTMLElement и обработчик событий.
+`constructor(container: HTMLElement, events: IEvents)` - принимает HTMLElement и обработчик событий.
 
 Поля класса:
 `cardElement: HTMLButtonElement` - элемент кнопки для оплаты онлайн.
@@ -389,7 +385,7 @@ interface IOrderResponse {
 Отвечает за отображение формы оформления заказа для заполнения данных покупателя: почта и номер телефона.
 
 Конструктор:
-`constructor(container: HTMLElement, protected events: IEvents)` - принимает HTMLElement и обработчик событий.
+`constructor(container: HTMLElement, events: IEvents)` - принимает HTMLElement и обработчик событий.
 
 Поля класса:
 `emailInputElement: HTMLInputElement` - инпут для ввода почты покупателя.
@@ -416,7 +412,6 @@ interface IOrderResponse {
 
 Обработчик событий:
 `buyer:change` - изменение данных покупателя.
-`modal:close` - нажатие кнопки закрытия модального окна.
 `catalog:change` - изменение каталога товаров.
 `card:selected` - изменение выбранного товара для отображения.
 `card__catalog:click` - нажатие на карточку для подробного отображения.
@@ -424,7 +419,7 @@ interface IOrderResponse {
 `basket:open` - нажатие кнопки открытия корзины.
 `cart:change` - изменение содержимого корзины.
 `basket:checkout` - нажатие кнопки оформления заказа в корзине.
-`basket__item:remove` - нажатие кнопки удаления товара из корзины.
+`basket__item:click` - нажатие кнопки удаления товара из корзины.
 `form:change` - изменение данных формы.
 `order:submit` - открытие формы заполнения почты и телефона.
 `contacts:submit` - кнопка оформления заказа и отправка его на сервер.

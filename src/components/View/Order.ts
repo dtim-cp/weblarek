@@ -13,10 +13,7 @@ export class Order extends Form<IOrder> {
   protected cashElement: HTMLButtonElement;
   protected inputElement: HTMLInputElement;
 
-  constructor(
-    container: HTMLElement,
-    protected events: IEvents,
-  ) {
+  constructor(container: HTMLElement, events: IEvents) {
     super(container, events);
 
     this.cardElement = ensureElement<HTMLButtonElement>(
@@ -33,21 +30,15 @@ export class Order extends Form<IOrder> {
     );
 
     this.cardElement.addEventListener("click", () => {
-      const field = "payment";
-      const value = "card";
-      this.onInputChange(field, value);
+      this.onInputChange({ field: "payment", value: "card" });
     });
 
     this.cashElement.addEventListener("click", () => {
-      const field = "payment";
-      const value = "cash";
-      this.onInputChange(field, value);
+      this.onInputChange({ field: "payment", value: "cash" });
     });
 
     this.inputElement.addEventListener("input", () => {
-      const field = "address";
-      const value = this.inputElement.value;
-      this.onInputChange(field, value);
+      this.onInputChange({ field: "address", value: this.inputElement.value });
     });
   }
 

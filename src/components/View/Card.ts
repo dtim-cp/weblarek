@@ -1,18 +1,17 @@
-import { IProduct } from "../../types";
 import { ensureElement } from "../../utils/utils";
 import { Component } from "../base/Component";
 import { categoryMap } from "../../utils/constants";
 
-export type categoryKeys = keyof typeof categoryMap;
+export type TCategory = keyof typeof categoryMap;
 
-export interface ICard extends Partial<IProduct> {
-  index?: number;
+export interface ICard {
+  title: string;
+  price: number | null;
 }
 
 export abstract class Card<T = object> extends Component<ICard & T> {
   protected titleElement: HTMLElement;
   protected priceElement: HTMLElement;
-  protected cardId?: string;
 
   constructor(container: HTMLElement) {
     super(container);
@@ -37,9 +36,5 @@ export abstract class Card<T = object> extends Component<ICard & T> {
     } else {
       this.priceElement.textContent = `${value} синапсов`;
     }
-  }
-
-  set id(value: string) {
-    this.cardId = value;
   }
 }

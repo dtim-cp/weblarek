@@ -1,10 +1,17 @@
 import { ensureElement } from "../../utils/utils";
 import { IEvents } from "../base/Events";
-import { Card, categoryKeys } from "./Card";
-import { IProduct } from "../../types";
+import { Card, TCategory } from "./Card";
 import { categoryMap } from "../../utils/constants";
 
-export class CardPreview extends Card<IProduct & { button: string }> {
+export interface ICardPreview {
+  category: string;
+  image: string;
+  description: string;
+  button: string;
+  buttonDisabled: boolean;
+}
+
+export class CardPreview extends Card<ICardPreview> {
   protected categoryElement: HTMLElement;
   protected imageElement: HTMLImageElement;
   protected descriptionElement: HTMLElement;
@@ -43,7 +50,7 @@ export class CardPreview extends Card<IProduct & { button: string }> {
 
     for (const key in categoryMap) {
       this.categoryElement.classList.toggle(
-        categoryMap[key as categoryKeys],
+        categoryMap[key as TCategory],
         key === value,
       );
     }
@@ -60,9 +67,9 @@ export class CardPreview extends Card<IProduct & { button: string }> {
 
   set button(value: string) {
     this.cardButton.textContent = value;
-    this.cardButton.disabled = false;
-    if (value === "Недоступно") {
-      this.cardButton.disabled = true;
-    }
+  }
+
+  set buttonDisabled(value: boolean) {
+    this.cardButton.disabled = value;
   }
 }

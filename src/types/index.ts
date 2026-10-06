@@ -21,22 +21,23 @@ export interface IProduct {
 export type TPayment = "card" | "cash";
 
 export interface IBuyer {
-  payment: TPayment;
+  payment: TPayment | null;
   email: string;
   phone: string;
   address: string;
 }
 
-export type Valid = Partial<Record<keyof IBuyer, string>>;
+export type TBuyerErrors = Partial<Record<keyof IBuyer, string>>;
 
 export interface IGetProductsResponse {
   total: number;
   items: IProduct[];
 }
 
-export interface IOrderRequest extends IBuyer {
+export interface IOrderRequest extends Omit<IBuyer, "payment"> {
   total: number;
   items: string[];
+  payment: TPayment;
 }
 
 export interface IOrderResponse {

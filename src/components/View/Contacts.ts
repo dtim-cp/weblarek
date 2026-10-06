@@ -11,10 +11,7 @@ export class Contacts extends Form<IContacts> {
   protected emailInputElement: HTMLInputElement;
   protected phoneInputElement: HTMLInputElement;
 
-  constructor(
-    container: HTMLElement,
-    protected events: IEvents,
-  ) {
+  constructor(container: HTMLElement, events: IEvents) {
     super(container, events);
 
     this.emailInputElement = ensureElement<HTMLInputElement>(
@@ -27,15 +24,17 @@ export class Contacts extends Form<IContacts> {
     );
 
     this.emailInputElement.addEventListener("input", () => {
-      const field = "email";
-      const value = this.emailInputElement.value;
-      this.onInputChange(field, value);
+      this.onInputChange({
+        field: "email",
+        value: this.emailInputElement.value,
+      });
     });
 
     this.phoneInputElement.addEventListener("input", () => {
-      const field = "phone";
-      const value = this.phoneInputElement.value;
-      this.onInputChange(field, value);
+      this.onInputChange({
+        field: "phone",
+        value: this.phoneInputElement.value,
+      });
     });
   }
 

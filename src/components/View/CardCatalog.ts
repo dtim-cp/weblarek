@@ -1,17 +1,17 @@
 import { ensureElement } from "../../utils/utils";
-import { IEvents } from "../base/Events";
-import { Card, categoryKeys } from "./Card";
-import { IProduct } from "../../types";
+import { Card, TCategory } from "./Card";
 import { categoryMap } from "../../utils/constants";
 
-export class CardCatalog extends Card<IProduct> {
+export interface ICardCatalog {
+  category: string;
+  image: { src: string; alt: string };
+}
+
+export class CardCatalog extends Card<ICardCatalog> {
   protected categoryElement: HTMLElement;
   protected imageElement: HTMLImageElement;
 
-  constructor(
-    container: HTMLElement,
-    protected events: IEvents,
-  ) {
+  constructor(container: HTMLElement, onClick: () => void) {
     super(container);
 
     this.categoryElement = ensureElement<HTMLElement>(
@@ -23,9 +23,7 @@ export class CardCatalog extends Card<IProduct> {
       this.container,
     );
 
-    this.container.addEventListener("click", () => {
-      this.events.emit("card__catalog:click", { id: this.cardId });
-    });
+    this.container.addEventListener("click", onClick);
   }
 
   set category(value: string) {
@@ -33,14 +31,13 @@ export class CardCatalog extends Card<IProduct> {
 
     for (const key in categoryMap) {
       this.categoryElement.classList.toggle(
-        categoryMap[key as categoryKeys],
+        categoryMap[key as TCategory],
         key === value,
       );
     }
   }
 
-  set image(value: string) {
-    this.imageElement.src = value;
-    this.imageElement.alt = this.titleElement.textContent ?? "";
+  set image(value: { src: string; alt: string }) {
+    this.setImage(this.imageElement, value.src, value.alt);
   }
 }

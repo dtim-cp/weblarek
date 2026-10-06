@@ -1,4 +1,4 @@
-import { IBuyer, TPayment, Valid } from "../../types";
+import { IBuyer, TPayment, TBuyerErrors } from "../../types";
 import { IEvents } from "../base/Events";
 
 export class Buyer {
@@ -31,7 +31,7 @@ export class Buyer {
 
   getBuyerData(): IBuyer {
     return {
-      payment: this.payment!,
+      payment: this.payment,
       address: this.address,
       phone: this.phone,
       email: this.email,
@@ -46,8 +46,8 @@ export class Buyer {
     this.events.emit("buyer:change");
   }
 
-  validate(): Valid {
-    const errors: Valid = {};
+  validate(): TBuyerErrors {
+    const errors: TBuyerErrors = {};
 
     if (!this.payment) {
       errors.payment = "Не выбран способ оплаты";

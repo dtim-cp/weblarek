@@ -2,14 +2,9 @@ import { IProduct } from "../../types";
 import { IEvents } from "../base/Events";
 
 export class CartProducts {
-  private selectedProducts: IProduct[];
+  private selectedProducts: IProduct[] = [];
 
-  constructor(
-    selectedProducts: IProduct[],
-    protected events: IEvents,
-  ) {
-    this.selectedProducts = [...selectedProducts];
-  }
+  constructor(protected events: IEvents) {}
 
   getSelectedProducts(): IProduct[] {
     return [...this.selectedProducts];

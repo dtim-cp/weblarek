@@ -5,6 +5,7 @@ import { IEvents } from "../base/Events";
 export interface IBasket {
   total: number;
   basket: HTMLElement[];
+  buttonStatus: boolean;
 }
 
 export class Basket extends Component<IBasket> {
@@ -41,15 +42,7 @@ export class Basket extends Component<IBasket> {
   }
 
   set basket(items: HTMLElement[]) {
-    if (items.length === 0) {
-      const description = document.createElement("P");
-      description.textContent = "Корзина пуста";
-      this.basketContainer.replaceChildren(description);
-      this.basketButtonElement.disabled = true;
-    } else {
-      this.basketContainer.replaceChildren(...items);
-      this.basketButtonElement.disabled = false;
-    }
+    this.basketContainer.replaceChildren(...items);
   }
 
   set buttonStatus(value: boolean) {

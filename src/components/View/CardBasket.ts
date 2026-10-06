@@ -1,5 +1,4 @@
 import { ensureElement } from "../../utils/utils";
-import { IEvents } from "../base/Events";
 import { Card } from "./Card";
 
 export interface ICardBasket {
@@ -10,10 +9,7 @@ export class CardBasket extends Card<ICardBasket> {
   protected indexElement: HTMLElement;
   protected cardButton: HTMLButtonElement;
 
-  constructor(
-    container: HTMLElement,
-    protected events: IEvents,
-  ) {
+  constructor(container: HTMLElement, onClick: () => void) {
     super(container);
 
     this.indexElement = ensureElement<HTMLElement>(
@@ -25,9 +21,7 @@ export class CardBasket extends Card<ICardBasket> {
       this.container,
     );
 
-    this.cardButton.addEventListener("click", () => {
-      this.events.emit("basket__item:remove", { id: this.cardId });
-    });
+    this.cardButton.addEventListener("click", onClick);
   }
 
   set index(value: number) {
